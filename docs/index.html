@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prop Board</title>
+<style>
+:root{--bg:#fff;--fg:#111;--mut:#666;--line:#ddd;--ok:#0a7d33;--warn:#a15c00;--card:#f6f6f6}
+@media(prefers-color-scheme:dark){:root{--bg:#0e0e10;--fg:#eee;--mut:#999;--line:#2a2a2e;--ok:#3ddc84;--warn:#ffb347;--card:#18181b}}
+*{box-sizing:border-box}
+body{margin:0;padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);background:var(--bg);color:var(--fg);font:15px -apple-system,system-ui,sans-serif}
+h1{font-size:18px;margin:12px 0 2px}
+#upd{color:var(--mut);font-size:12px;margin-bottom:8px}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+select,input{font:inherit;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg)}
+input{flex:1;min-width:120px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px}
+.t{display:flex;justify-content:space-between;font-weight:600}
+.s{color:var(--mut);font-size:12px;margin-top:3px}
+.g{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:6px;font-size:13px}
+.g b{display:block;font-size:11px;color:var(--mut);font-weight:400}
+.CONFIRMED{color:var(--ok)}.MODEL-ONLY,.UNCONFIRMED{color:var(--warn)}
+</style>
+</head>
+<body>
+<h1>Prop Board</h1>
+<div id="upd">loading…</div>
+<div class="bar">
+<select id="sport"><option value="">All sports</option></select>
+<select id="tier"><option value="">All tiers</option><option>CONFIRMED</option><option>UNCONFIRMED</option><option>MODEL-ONLY</option></select>
+<select id="sort"><option value="edge">Edge</option><option value="kelly">Stake</option><option value="start">Start</option></select>
+<input id="q" placeholder="Player / market" type="search">
+</div>
+<div id="out"></div>
+<script>
+let D=[];
+const $=id=>document.getElementById(id);
+const pct=x=>x==null?"–":(x*100).toFixed(1)+"%";
+function render(){
+  const s=$("sport").value,t=$("tier").value,q=$("q").value.toLowerCase(),k=$("sort").value;
+  let r=D.filter(x=>(!s||x.sport===s)&&(!t||x.tier===t)&&(!q||(x.player+x.market).toLowerCase().includes(q)));
+  r.sort((a,b)=>k==="start"?a.start.localeCompare(b.start):b[k]-a[k]);
+  $("out").innerHTML=r.slice(0,200).map(x=>`<div class="c"><div class="t"><span>${x.player} ${x.side[0]} ${x.line}</span><span class="${x.tier}">${pct(x.edge)}</span></div>
+<div class="s">${x.market.replace(/_/g," ")} · ${x.book} @ ${x.odds.toFixed(2)} · ${x.game}</div>
+<div class="g"><div><b>Proj</b>${x.proj}</div><div><b>Model</b>${pct(x.p_model)}</div><div><b>Sharp</b>${pct(x.p_sharp)}</div><div><b>Stake</b>${(x.kelly*100).toFixed(2)}u</div></div>
+<div class="s ${x.tier}">${x.tier} · n=${x.n}</div></div>`).join("")||"<div class='s'>No edges.</div>";
+}
+fetch("data/board.json?"+Date.now()).then(r=>r.json()).then(j=>{
+  D=j.rows;$("upd").textContent=`${j.count} edges · ${new Date(j.updated).toLocaleString()}`;
+  [...new Set(D.map(x=>x.sport))].forEach(v=>{const o=document.createElement("option");o.value=o.textContent=v;$("sport").appendChild(o)});
+  render();
+}).catch(()=>$("upd").textContent="No data yet — run the workflow.");
+["sport","tier","sort","q"].forEach(i=>$(i).addEventListener("input",render));
+</script>
+</body>
+</html>
