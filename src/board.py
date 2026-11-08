@@ -7,7 +7,7 @@ import numpy as np
 from scipy import stats
 
 ODDS_KEY = os.environ["ODDS_API_KEY"]
-SHARP = "pinnacle"
+SHARP = "pinnacle,novig"
 HALF_LIFE = 10
 W_RECENT = 0.6
 W_MODEL = 0.5
@@ -17,15 +17,15 @@ MIN_GAMES = {"americanfootball_nfl": 5, "basketball_nba": 8, "icehockey_nhl": 8}
 
 MARKETS = {
     "americanfootball_nfl": {
-        "player_pass_yds": "passing_yards", "player_pass_tds": "passing_tds",
-        "player_rush_yds": "rushing_yards", "player_receptions": "receptions",
-        "player_reception_yds": "receiving_yards"},
+        "player_pass_yds_alternate": "passing_yards", "player_pass_tds_alternate": "passing_tds",
+        "player_rush_yds_alternate": "rushing_yards_alternate", "player_receptions_alternate": "receptions",
+        "player_reception_yds_alternate": "receiving_yards"},
     "basketball_nba": {
-        "player_points": "PTS", "player_rebounds": "REB", "player_assists": "AST",
-        "player_threes": "FG3M", "player_points_rebounds_assists": "PRA"},
+        "player_points_alternate": "PTS", "player_rebounds_alternate": "REB", "player_assists_alternate": "AST",
+        "player_threes_alternate": "FG3M", "player_points_rebounds_assists_alternate": "PRA"},
     "icehockey_nhl": {
-        "player_points": "points", "player_assists": "assists",
-        "player_shots_on_goal": "shots", "player_goals": "goals"},
+        "player_points_alternate": "points", "player_assists_alternaye": "assists",
+        "player_shots_on_goal_alternate": "shots", "player_goals_alternate": "goals"},
 }
 
 def norm(n):
