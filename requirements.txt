@@ -1,4 +1,6 @@
 numpy
 scipy
 requests
+pandas
 nba_api
+nflreadpy
