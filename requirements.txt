@@ -3,4 +3,5 @@ scipy
 requests
 pandas
 nba_api
-nflreadpy
+nflreadpy[pandas]
+scikit-learn
