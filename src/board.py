@@ -24,7 +24,7 @@ MARKETS = {
         "player_points_alternate": "PTS", "player_rebounds_alternate": "REB", "player_assists_alternate": "AST",
         "player_threes_alternate": "FG3M", "player_points_rebounds_assists_alternate": "PRA"},
     "icehockey_nhl": {
-        "player_points_alternate": "points", "player_assists_alternaye": "assists",
+        "player_points_alternate": "points", "player_assists_alternate": "assists",
         "player_shots_on_goal_alternate": "shots", "player_goals_alternate": "goals"},
 }
 
